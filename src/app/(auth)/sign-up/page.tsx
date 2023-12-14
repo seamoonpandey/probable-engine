@@ -1,13 +1,31 @@
 "use client";
 
 import { Icons } from "@/components/Icons";
+import { useForm } from "react-hook-form";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { Label } from "@radix-ui/react-label";
 import Link from "next/link";
+import { zodResolver } from "@hookform/resolvers/zod";
+import {
+  AuthCredentialsValidator,
+  TAuthCredentialsValidator,
+} from "@/lib/validators/account-credentials-validator";
 
 const Page = () => {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<TAuthCredentialsValidator>({
+    resolver: zodResolver(AuthCredentialsValidator),
+  });
+
+  const onSubmit = ({ email, password }: TAuthCredentialsValidator) => {
+    // TODO: send data to the server
+  };
+
   return (
     <>
       <div className="container relative flex pt-20 flex-col items-center justify-center lg:px-0">
@@ -28,13 +46,14 @@ const Page = () => {
           </div>
 
           <div className="grid gap-6">
-            <form onSubmit={() => {}}>
+            <form onSubmit={handleSubmit(onSubmit)}>
               <div className="grid gap-2">
                 <div className="grid gap-1 py-2">
                   <Label htmlFor="email">Email</Label>
                   <Input
+                    {...register("email")}
                     className={cn({
-                      "focus-visible:ring-red-500": true,
+                      "focus-visible:ring-red-500": errors.email,
                     })}
                     placeholder="you@example.com"
                   />
@@ -42,8 +61,9 @@ const Page = () => {
                 <div className="grid gap-1 py-2">
                   <Label htmlFor="email">Password</Label>
                   <Input
+                    {...register("password")}
                     className={cn({
-                      "focus-visible:ring-red-500": true,
+                      "focus-visible:ring-red-500": errors.password,
                     })}
                     placeholder="your_password"
                   />
