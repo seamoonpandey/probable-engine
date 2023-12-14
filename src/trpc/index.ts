@@ -1,7 +1,7 @@
 import { publicProcedure, router } from "./trpc";
 
 export const appRouter = router({
-    anyApiRoute: publicProcedure.query(()=>{
+    anyApiRoute: publicProcedure.query(() => {
         return 'hello'
     }),
 })
