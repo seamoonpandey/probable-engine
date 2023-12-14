@@ -15,11 +15,15 @@ import {
 import { trpc } from "@/trpc/client";
 import { toast } from "sonner";
 import { ZodError } from "zod";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { ArrowRight } from "lucide-react";
 
 const Page = () => {
+  const searchParams = useSearchParams();
   const router = useRouter();
+  const isSeller = searchParams.get("as") === "seller";
+  const origin = searchParams.get("origin");
+
   const {
     register,
     handleSubmit,
@@ -28,7 +32,7 @@ const Page = () => {
     resolver: zodResolver(AuthCredentialsValidator),
   });
 
-  const { mutate, isLoading } = trpc.auth.createPayloadUser.useMutation({
+  const { mutate, isLoading } = trpc.auth.signIn.useMutation({
     onError: (err) => {
       if (err.data?.code === "CONFLICT") {
         toast.error("This email is already in use. Sign in instead?");
