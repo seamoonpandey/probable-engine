@@ -9,7 +9,7 @@ dotenv.config({
 })
 
 const transporter = nodemailer.createTransport({
-    host: "smpt.resend.com",
+    host: "smtp.resend.com",
     secure: true,
     port: 465,
     auth: {
@@ -42,6 +42,13 @@ export const getPayloadClient = async ({ initOptions }: Args = {}): Promise<Payl
 
     if (!cached.promise) {
         cached.promise = payload.init({
+            email: {
+                transport: transporter,
+                // TODO: after verifying the domain while deploying we need to use our own mail and domain 
+                fromAddress: "hello@seamoonpandey.com.np",
+                // fromAddress: "onboarding@resend.dev",
+                fromName: "DigitalHippo"
+            },
             secret: process.env.PAYLOAD_SECRET,
             local: initOptions?.express ? false : true,
             ...(initOptions || {}),
